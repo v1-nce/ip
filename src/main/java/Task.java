@@ -38,4 +38,14 @@ public class Task {
     public void markNotDone() {
         this.isDone = false;
     }
+
+    /**
+     * Returns the display text for this task.
+     *
+     * @return task status and description
+     */
+    @Override
+    public String toString() {
+        return "[" + getStatusIcon() + "] " + this.description;
+    }
 }
