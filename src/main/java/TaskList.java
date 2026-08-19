@@ -16,13 +16,19 @@ public class TaskList {
     }
 
     /**
-     * Adds a task to the end of the list.
+     * Adds a task to the end of the list if there is space.
      *
      * @param task task to add
+     * @return true if the task was added, otherwise false
      */
-    public void add(Task task) {
+    public boolean add(Task task) {
+        if (isFull()) {
+            return false;
+        }
+
         this.tasks[this.taskCount] = task;
         this.taskCount++;
+        return true;
     }
 
     /**
@@ -82,4 +88,5 @@ public class TaskList {
     public boolean isFull() {
         return this.taskCount == this.tasks.length;
     }
+
 }
