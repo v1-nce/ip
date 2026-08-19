@@ -70,13 +70,47 @@ public class Summer {
             if (tasks.isFull()) {
                 System.out.println(" Sorry, I can only store up to 100 tasks!");
             } else {
-                Task task = new Task(command, false);
+                Task task = createTask(command);
                 tasks.add(task);
-                System.out.println(" added: " + command);
+                System.out.println(" Got it. I've added this task:");
+                System.out.println("   " + task);
+                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
             }
             System.out.println(SEPARATOR);
         }
         scanner.close();
+    }
+
+    /**
+     * Creates the task type represented by a user command.
+     *
+     * @param command user command describing a todo, deadline, or event
+     * @return task represented by the command
+     */
+    private static Task createTask(String command) {
+        if (command.startsWith("todo ")) {
+            return new ToDo(command.substring("todo ".length()).trim(), false);
+        }
+
+        if (command.startsWith("deadline ")) {
+            String details = command.substring("deadline ".length());
+            int byIndex = details.indexOf(" /by ");
+            String description = details.substring(0, byIndex).trim();
+            String by = details.substring(byIndex + " /by ".length()).trim();
+            return new Deadline(description, by, false);
+        }
+
+        if (command.startsWith("event ")) {
+            String details = command.substring("event ".length());
+            int fromIndex = details.indexOf(" /from ");
+            int toIndex = details.indexOf(" /to ");
+            String description = details.substring(0, fromIndex).trim();
+            String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
+            String to = details.substring(toIndex + " /to ".length()).trim();
+            return new Event(description, from, to, false);
+        }
+
+        return new ToDo(command, false);
     }
 
     /**
