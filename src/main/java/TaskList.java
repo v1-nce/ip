@@ -36,6 +36,16 @@ public class TaskList {
     }
 
     /**
+     * Checks whether the given zero-based index refers to a stored task.
+     *
+     * @param index zero-based position to check
+     * @return true if there is a task at the given index
+     */
+    public boolean hasTaskAt(int index) {
+        return index >= 0 && index < this.taskCount;
+    }
+
+    /**
      * Returns a numbered display of all tasks in the list.
      *
      * @return formatted task list ready to print
