@@ -21,8 +21,7 @@ public class Summer {
         System.out.println("Hello! I'm Summer.");
         System.out.println("What can I do for you?");
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[MAX_TASKS];
-        int taskCount = 0;
+        TaskList tasks = new TaskList(MAX_TASKS);
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -35,22 +34,62 @@ public class Summer {
             }
 
             if (command.equals("list")) {
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println(" " + (i + 1) + ". " + tasks[i]);
+                System.out.println(tasks.list());
+                System.out.println(SEPARATOR);
+                continue;
+            }
+
+            if (command.startsWith("mark ")) {
+                int taskIndex = getTaskIndex(command);
+                if (tasks.hasTaskAt(taskIndex)) {
+                    Task task = tasks.get(taskIndex);
+                    task.markAsDone();
+                    System.out.println(" Nice! I've marked this task as done:");
+                    System.out.println("   " + task);
+                } else {
+                    System.out.println(" Sorry, that task number does not exist!");
                 }
                 System.out.println(SEPARATOR);
                 continue;
             }
 
-            if (taskCount == MAX_TASKS) {
+            if (command.startsWith("unmark ")) {
+                int taskIndex = getTaskIndex(command);
+                if (tasks.hasTaskAt(taskIndex)) {
+                    Task task = tasks.get(taskIndex);
+                    task.markNotDone();
+                    System.out.println(" OK, I've marked this task as not done yet:");
+                    System.out.println("   " + task);
+                } else {
+                    System.out.println(" Sorry, that task number does not exist!");
+                }
+                System.out.println(SEPARATOR);
+                continue;
+            }
+
+            if (tasks.isFull()) {
                 System.out.println(" Sorry, I can only store up to 100 tasks!");
             } else {
-                tasks[taskCount] = command;
-                taskCount++;
+                Task task = new Task(command, false);
+                tasks.add(task);
                 System.out.println(" added: " + command);
             }
             System.out.println(SEPARATOR);
         }
         scanner.close();
+    }
+
+    /**
+     * Returns the zero-based task index from a command.
+     *
+     * @param command user command containing a task number after the first space
+     * @return zero-based index of the requested task
+     */
+    private static int getTaskIndex(String command) {
+        try {
+            return Integer.parseInt(command.substring(command.indexOf(" ") + 1).trim()) - 1;
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 }
