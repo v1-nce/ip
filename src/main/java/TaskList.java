@@ -1,34 +1,25 @@
+import java.util.ArrayList;
+
 /**
  * Stores the tasks currently known to Summer as a managed list.
  */
 public class TaskList {
-    private final Task[] tasks;
-    private int taskCount;
+    private final ArrayList<Task> tasks;
 
     /**
-     * Creates a task list with the given maximum number of tasks.
-     *
-     * @param capacity maximum number of tasks this list can store
+     * Creates an empty task list.
      */
-    public TaskList(int capacity) {
-        this.tasks = new Task[capacity];
-        this.taskCount = 0;
+    public TaskList() {
+        this.tasks = new ArrayList<>();
     }
 
     /**
-     * Adds a task to the end of the list if there is space.
+     * Adds a task to the end of the list.
      *
      * @param task task to add
-     * @return true if the task was added, otherwise false
      */
-    public boolean add(Task task) {
-        if (isFull()) {
-            return false;
-        }
-
-        this.tasks[this.taskCount] = task;
-        this.taskCount++;
-        return true;
+    public void add(Task task) {
+        this.tasks.add(task);
     }
 
     /**
@@ -38,7 +29,17 @@ public class TaskList {
      * @return task at the given index
      */
     public Task get(int index) {
-        return this.tasks[index];
+        return this.tasks.get(index);
+    }
+
+    /**
+     * Removes and returns the task at the given zero-based index.
+     *
+     * @param index zero-based position of the task to remove
+     * @return removed task
+     */
+    public Task delete(int index) {
+        return this.tasks.remove(index);
     }
 
     /**
@@ -48,7 +49,7 @@ public class TaskList {
      * @return true if there is a task at the given index
      */
     public boolean hasTaskAt(int index) {
-        return index >= 0 && index < this.taskCount;
+        return index >= 0 && index < this.tasks.size();
     }
 
     /**
@@ -60,12 +61,12 @@ public class TaskList {
         StringBuilder builder = new StringBuilder(" Here are the tasks in your list:");
         String lineSeparator = System.lineSeparator();
 
-        for (int i = 0; i < this.taskCount; i++) {
+        for (int i = 0; i < this.tasks.size(); i++) {
             builder.append(lineSeparator)
                     .append(" ")
                     .append(i + 1)
                     .append(".")
-                    .append(this.tasks[i]);
+                    .append(this.tasks.get(i));
         }
 
         return builder.toString();
@@ -77,16 +78,7 @@ public class TaskList {
      * @return number of stored tasks
      */
     public int size() {
-        return this.taskCount;
-    }
-
-    /**
-     * Checks whether this list has reached its capacity.
-     *
-     * @return true if no more tasks can be added
-     */
-    public boolean isFull() {
-        return this.taskCount == this.tasks.length;
+        return this.tasks.size();
     }
 
 }
