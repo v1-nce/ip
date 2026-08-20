@@ -1,17 +1,20 @@
 /**
  * Represents a task entered by the user.
  */
-public class Task {
-    protected String description;
-    protected boolean isDone;
+public abstract class Task {
+    private final TaskType type;
+    private final String description;
+    private boolean isDone;
 
     /**
-     * Creates a task with the given description and completion status.
+     * Creates a task with the given type, description, and completion status.
      *
+     * @param type category of this task
      * @param description text describing the task
      * @param isDone whether the task is already completed
      */
-    public Task(String description, boolean isDone) {
+    public Task(TaskType type, String description, boolean isDone) {
+        this.type = type;
         this.description = description;
         this.isDone = isDone;
     }
@@ -42,10 +45,10 @@ public class Task {
     /**
      * Returns the display text for this task.
      *
-     * @return task status and description
+     * @return task type, status, and description
      */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + this.description;
+        return "[" + this.type.getIcon() + "][" + getStatusIcon() + "] " + this.description;
     }
 }
