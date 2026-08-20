@@ -14,7 +14,7 @@ public class Event extends Task {
      * @param isDone whether the task is already completed
      */
     public Event(String description, String from, String to, boolean isDone) {
-        super(description, isDone);
+        super(TaskType.EVENT, description, isDone);
         this.from = from;
         this.to = to;
     }
@@ -26,6 +26,6 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + this.from + " to: " + this.to + ")";
+        return super.toString() + " (from: " + this.from + " to: " + this.to + ")";
     }
 }
