@@ -67,14 +67,18 @@ public class Summer {
                 continue;
             }
 
-            if (tasks.isFull()) {
-                System.out.println(" Sorry, I can only store up to 100 tasks!");
-            } else {
-                Task task = createTask(command);
-                tasks.add(task);
-                System.out.println(" Got it. I've added this task:");
-                System.out.println("   " + task);
-                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+            try {
+                if (tasks.isFull()) {
+                    System.out.println(" Sorry, I can only store up to 100 tasks!");
+                } else {
+                    Task task = createTask(command);
+                    tasks.add(task);
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("   " + task);
+                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                }
+            } catch (SummerException e) {
+                System.out.println(" OOPS!!! " + e.getMessage());
             }
             System.out.println(SEPARATOR);
         }
@@ -86,31 +90,53 @@ public class Summer {
      *
      * @param command user command describing a todo, deadline, or event
      * @return task represented by the command
+     * @throws SummerException if the command is unknown or missing required details
      */
-    private static Task createTask(String command) {
-        if (command.startsWith("todo ")) {
-            return new ToDo(command.substring("todo ".length()).trim(), false);
+    private static Task createTask(String command) throws SummerException {
+        if (command.equals("todo") || command.startsWith("todo ")) {
+            String description = command.substring("todo".length()).trim();
+            if (description.isEmpty()) {
+                throw new SummerException("A todo needs a description.");
+            }
+
+            return new ToDo(description, false);
         }
 
-        if (command.startsWith("deadline ")) {
-            String details = command.substring("deadline ".length());
+        if (command.equals("deadline") || command.startsWith("deadline ")) {
+            String details = command.substring("deadline".length()).trim();
             int byIndex = details.indexOf(" /by ");
+            if (byIndex == -1) {
+                throw new SummerException("A deadline needs this format: deadline DESCRIPTION /by WHEN");
+            }
+
             String description = details.substring(0, byIndex).trim();
             String by = details.substring(byIndex + " /by ".length()).trim();
+            if (description.isEmpty() || by.isEmpty()) {
+                throw new SummerException("A deadline needs both a description and a /by value.");
+            }
+
             return new Deadline(description, by, false);
         }
 
-        if (command.startsWith("event ")) {
-            String details = command.substring("event ".length());
+        if (command.equals("event") || command.startsWith("event ")) {
+            String details = command.substring("event".length()).trim();
             int fromIndex = details.indexOf(" /from ");
             int toIndex = details.indexOf(" /to ");
+            if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
+                throw new SummerException("An event needs this format: event DESCRIPTION /from START /to END");
+            }
+
             String description = details.substring(0, fromIndex).trim();
             String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
             String to = details.substring(toIndex + " /to ".length()).trim();
+            if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                throw new SummerException("An event needs a description, /from value, and /to value.");
+            }
+
             return new Event(description, from, to, false);
         }
 
-        return new ToDo(command, false);
+        throw new SummerException("I don't know that command yet.");
     }
 
     /**
