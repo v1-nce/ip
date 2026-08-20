@@ -67,6 +67,20 @@ public class Summer {
                 continue;
             }
 
+            if (command.startsWith("delete ")) {
+                int taskIndex = getTaskIndex(command);
+                if (tasks.hasTaskAt(taskIndex)) {
+                    Task task = tasks.delete(taskIndex);
+                    System.out.println(" Noted. I've removed this task:");
+                    System.out.println("   " + task);
+                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                } else {
+                    System.out.println(" Sorry, that task number does not exist!");
+                }
+                System.out.println(SEPARATOR);
+                continue;
+            }
+
             try {
                 if (tasks.isFull()) {
                     System.out.println(" Sorry, I can only store up to 100 tasks!");
