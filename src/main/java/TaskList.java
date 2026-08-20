@@ -5,12 +5,16 @@ import java.util.ArrayList;
  */
 public class TaskList {
     private final ArrayList<Task> tasks;
+    private final int capacity;
 
     /**
-     * Creates an empty task list.
+     * Creates an empty task list with the given maximum number of tasks.
+     *
+     * @param capacity maximum number of tasks this list can store
      */
-    public TaskList() {
+    public TaskList(int capacity) {
         this.tasks = new ArrayList<>();
+        this.capacity = capacity;
     }
 
     /**
@@ -79,6 +83,15 @@ public class TaskList {
      */
     public int size() {
         return this.tasks.size();
+    }
+
+    /**
+     * Checks whether this list has reached its capacity.
+     *
+     * @return true if no more tasks can be added
+     */
+    public boolean isFull() {
+        return this.tasks.size() == this.capacity;
     }
 
 }
