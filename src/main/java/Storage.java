@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,13 +87,13 @@ public class Storage {
             case "T":
                 return new ToDo(description, isDone);
             case "D":
-                return new Deadline(description, parts[3], isDone);
+                return new Deadline(description, LocalDate.parse(parts[3]), isDone);
             case "E":
-                return new Event(description, parts[3], parts[4], isDone);
+                return new Event(description, LocalDate.parse(parts[3]), LocalDate.parse(parts[4]), isDone);
             default:
                 return null;
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | DateTimeParseException e) {
             return null;
         }
     }

@@ -1,4 +1,6 @@
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Summer {
@@ -42,6 +44,17 @@ public class Summer {
 
             if (command.equals("list")) {
                 System.out.println(tasks.list());
+                System.out.println(SEPARATOR);
+                continue;
+            }
+
+            if (command.startsWith("on ")) {
+                try {
+                    LocalDate date = parseDate(command.substring("on ".length()).trim());
+                    System.out.println(tasks.listOn(date));
+                } catch (SummerException e) {
+                    System.out.println(" OOPS!!! " + e.getMessage());
+                }
                 System.out.println(SEPARATOR);
                 continue;
             }
@@ -140,7 +153,7 @@ public class Summer {
                 throw new SummerException("A deadline needs both a description and a /by value.");
             }
 
-            return new Deadline(description, by, false);
+            return new Deadline(description, parseDate(by), false);
         }
 
         if (command.equals("event") || command.startsWith("event ")) {
@@ -158,10 +171,25 @@ public class Summer {
                 throw new SummerException("An event needs a description, /from value, and /to value.");
             }
 
-            return new Event(description, from, to, false);
+            return new Event(description, parseDate(from), parseDate(to), false);
         }
 
         throw new SummerException("I don't know that command yet.");
+    }
+
+    /**
+     * Parses a date given by the user in yyyy-mm-dd format.
+     *
+     * @param text date text, expected as yyyy-mm-dd (e.g. 2019-10-15)
+     * @return parsed date
+     * @throws SummerException if the text is not a valid yyyy-mm-dd date
+     */
+    private static LocalDate parseDate(String text) throws SummerException {
+        try {
+            return LocalDate.parse(text);
+        } catch (DateTimeParseException e) {
+            throw new SummerException("Please give dates as yyyy-mm-dd, e.g. 2019-10-15.");
+        }
     }
 
     /**
