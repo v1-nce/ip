@@ -51,4 +51,15 @@ public abstract class Task {
     public String toString() {
         return "[" + this.type.getIcon() + "][" + getStatusIcon() + "] " + this.description;
     }
+
+    /**
+     * Returns this task's representation for the save file, as a
+     * pipe-delimited line: type icon, done flag (1/0), and description.
+     * Subclasses append their own extra fields.
+     *
+     * @return pipe-delimited save line for this task
+     */
+    public String toSaveFormat() {
+        return this.type.getIcon() + " | " + (this.isDone ? "1" : "0") + " | " + this.description;
+    }
 }
