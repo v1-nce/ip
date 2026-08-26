@@ -1,10 +1,6 @@
 import java.nio.file.Path;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.Scanner;
 
 public class Summer {
-    private static final String SEPARATOR = "____________________________________________________________";
     private static final int MAX_TASKS = 100;
     private static final Path DATA_FILE_PATH = Path.of("data", "summer.txt");
 
@@ -14,17 +10,7 @@ public class Summer {
      * @param args command line arguments, not used by this program
      */
     public static void main(String[] args) {
-        String banner = "                                           \n"
-                + " ___ _   _ _ __ ___  _ __ ___   ___ _ __ \n"
-                + "/ __| | | | '_ ` _ \\| '_ ` _ \\ / _ \\ '__|\n"
-                + "\\__ \\ |_| | | | | | | | | | | |  __/ |   \n"
-                + "|___/\\__,_|_| |_| |_|_| |_| |_|\\___|_|   \n";
-
-        System.out.println(SEPARATOR);
-        System.out.println(banner);
-        System.out.println("Hello! I'm Summer.");
-        System.out.println("What can I do for you?");
-        Scanner scanner = new Scanner(System.in);
+        Ui ui = new Ui();
         Storage storage = new Storage(DATA_FILE_PATH);
         TaskList tasks = new TaskList(MAX_TASKS);
         // Load tasks from disk
@@ -32,177 +18,21 @@ public class Summer {
             tasks.add(task);
         }
 
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
-
-            System.out.println(SEPARATOR);
-            if (command.equals("bye")) {
-                System.out.println(" Goodbye! Have an amazing day ahead!");
-                System.out.println(SEPARATOR);
-                break;
-            }
-
-            if (command.equals("list")) {
-                System.out.println(tasks.list());
-                System.out.println(SEPARATOR);
-                continue;
-            }
-
-            if (command.startsWith("on ")) {
-                try {
-                    LocalDate date = parseDate(command.substring("on ".length()).trim());
-                    System.out.println(tasks.listOn(date));
-                } catch (SummerException e) {
-                    System.out.println(" OOPS!!! " + e.getMessage());
-                }
-                System.out.println(SEPARATOR);
-                continue;
-            }
-
-            if (command.startsWith("mark ")) {
-                int taskIndex = getTaskIndex(command);
-                if (tasks.hasTaskAt(taskIndex)) {
-                    Task task = tasks.get(taskIndex);
-                    task.markAsDone();
-                    storage.save(tasks);
-                    System.out.println(" Nice! I've marked this task as done:");
-                    System.out.println("   " + task);
-                } else {
-                    System.out.println(" Sorry, that task number does not exist!");
-                }
-                System.out.println(SEPARATOR);
-                continue;
-            }
-
-            if (command.startsWith("unmark ")) {
-                int taskIndex = getTaskIndex(command);
-                if (tasks.hasTaskAt(taskIndex)) {
-                    Task task = tasks.get(taskIndex);
-                    task.markNotDone();
-                    storage.save(tasks);
-                    System.out.println(" OK, I've marked this task as not done yet:");
-                    System.out.println("   " + task);
-                } else {
-                    System.out.println(" Sorry, that task number does not exist!");
-                }
-                System.out.println(SEPARATOR);
-                continue;
-            }
-
-            if (command.startsWith("delete ")) {
-                int taskIndex = getTaskIndex(command);
-                if (tasks.hasTaskAt(taskIndex)) {
-                    Task task = tasks.delete(taskIndex);
-                    storage.save(tasks);
-                    System.out.println(" Noted. I've removed this task:");
-                    System.out.println("   " + task);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                } else {
-                    System.out.println(" Sorry, that task number does not exist!");
-                }
-                System.out.println(SEPARATOR);
-                continue;
-            }
-
+        ui.showWelcome();
+        boolean isExit = false;
+        String fullCommand;
+        while (!isExit && (fullCommand = ui.readCommand()) != null) {
+            ui.showLine();
             try {
-                if (tasks.isFull()) {
-                    System.out.println(" Sorry, I can only store up to 100 tasks!");
-                } else {
-                    Task task = createTask(command);
-                    tasks.add(task);
-                    storage.save(tasks);
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + task);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                }
+                Command command = Parser.parse(fullCommand);
+                command.execute(tasks, ui, storage);
+                isExit = command.isExit();
             } catch (SummerException e) {
-                System.out.println(" OOPS!!! " + e.getMessage());
+                ui.showError(e.getMessage());
+            } finally {
+                ui.showLine();
             }
-            System.out.println(SEPARATOR);
         }
-        scanner.close();
-    }
-
-    /**
-     * Creates the task type represented by a user command.
-     *
-     * @param command user command describing a todo, deadline, or event
-     * @return task represented by the command
-     * @throws SummerException if the command is unknown or missing required details
-     */
-    private static Task createTask(String command) throws SummerException {
-        if (command.equals("todo") || command.startsWith("todo ")) {
-            String description = command.substring("todo".length()).trim();
-            if (description.isEmpty()) {
-                throw new SummerException("A todo needs a description.");
-            }
-
-            return new ToDo(description, false);
-        }
-
-        if (command.equals("deadline") || command.startsWith("deadline ")) {
-            String details = command.substring("deadline".length()).trim();
-            int byIndex = details.indexOf(" /by ");
-            if (byIndex == -1) {
-                throw new SummerException("A deadline needs this format: deadline DESCRIPTION /by WHEN");
-            }
-
-            String description = details.substring(0, byIndex).trim();
-            String by = details.substring(byIndex + " /by ".length()).trim();
-            if (description.isEmpty() || by.isEmpty()) {
-                throw new SummerException("A deadline needs both a description and a /by value.");
-            }
-
-            return new Deadline(description, parseDate(by), false);
-        }
-
-        if (command.equals("event") || command.startsWith("event ")) {
-            String details = command.substring("event".length()).trim();
-            int fromIndex = details.indexOf(" /from ");
-            int toIndex = details.indexOf(" /to ");
-            if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
-                throw new SummerException("An event needs this format: event DESCRIPTION /from START /to END");
-            }
-
-            String description = details.substring(0, fromIndex).trim();
-            String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
-            String to = details.substring(toIndex + " /to ".length()).trim();
-            if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                throw new SummerException("An event needs a description, /from value, and /to value.");
-            }
-
-            return new Event(description, parseDate(from), parseDate(to), false);
-        }
-
-        throw new SummerException("I don't know that command yet.");
-    }
-
-    /**
-     * Parses a date given by the user in yyyy-mm-dd format.
-     *
-     * @param text date text, expected as yyyy-mm-dd (e.g. 2019-10-15)
-     * @return parsed date
-     * @throws SummerException if the text is not a valid yyyy-mm-dd date
-     */
-    private static LocalDate parseDate(String text) throws SummerException {
-        try {
-            return LocalDate.parse(text);
-        } catch (DateTimeParseException e) {
-            throw new SummerException("Please give dates as yyyy-mm-dd, e.g. 2019-10-15.");
-        }
-    }
-
-    /**
-     * Returns the zero-based task index from a command.
-     *
-     * @param command user command containing a task number after the first space
-     * @return zero-based index of the requested task
-     */
-    private static int getTaskIndex(String command) {
-        try {
-            return Integer.parseInt(command.substring(command.indexOf(" ") + 1).trim()) - 1;
-        } catch (NumberFormatException e) {
-            return -1;
-        }
+        ui.close();
     }
 }
