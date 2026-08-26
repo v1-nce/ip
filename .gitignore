@@ -19,6 +19,9 @@ bin/
 # Temp files
 _temp/
 
+# Saved task data (generated at runtime)
+/data/
+
 # Codex local files
 .codex/
 
