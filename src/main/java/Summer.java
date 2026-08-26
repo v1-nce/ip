@@ -1,8 +1,10 @@
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Summer {
     private static final String SEPARATOR = "____________________________________________________________";
     private static final int MAX_TASKS = 100;
+    private static final Path DATA_FILE_PATH = Path.of("data", "summer.txt");
 
     /**
      * Starts the chatbot, stores each task, lists saved tasks, and exits on bye.
@@ -21,7 +23,12 @@ public class Summer {
         System.out.println("Hello! I'm Summer.");
         System.out.println("What can I do for you?");
         Scanner scanner = new Scanner(System.in);
+        Storage storage = new Storage(DATA_FILE_PATH);
         TaskList tasks = new TaskList(MAX_TASKS);
+        // Load tasks from disk
+        for (Task task : storage.load()) {
+            tasks.add(task);
+        }
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -44,6 +51,7 @@ public class Summer {
                 if (tasks.hasTaskAt(taskIndex)) {
                     Task task = tasks.get(taskIndex);
                     task.markAsDone();
+                    storage.save(tasks);
                     System.out.println(" Nice! I've marked this task as done:");
                     System.out.println("   " + task);
                 } else {
@@ -58,6 +66,7 @@ public class Summer {
                 if (tasks.hasTaskAt(taskIndex)) {
                     Task task = tasks.get(taskIndex);
                     task.markNotDone();
+                    storage.save(tasks);
                     System.out.println(" OK, I've marked this task as not done yet:");
                     System.out.println("   " + task);
                 } else {
@@ -71,6 +80,7 @@ public class Summer {
                 int taskIndex = getTaskIndex(command);
                 if (tasks.hasTaskAt(taskIndex)) {
                     Task task = tasks.delete(taskIndex);
+                    storage.save(tasks);
                     System.out.println(" Noted. I've removed this task:");
                     System.out.println("   " + task);
                     System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
@@ -87,6 +97,7 @@ public class Summer {
                 } else {
                     Task task = createTask(command);
                     tasks.add(task);
+                    storage.save(tasks);
                     System.out.println(" Got it. I've added this task:");
                     System.out.println("   " + task);
                     System.out.println(" Now you have " + tasks.size() + " tasks in the list.");

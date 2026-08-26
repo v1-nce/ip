@@ -28,4 +28,14 @@ public class Event extends Task {
     public String toString() {
         return super.toString() + " (from: " + this.from + " to: " + this.to + ")";
     }
+
+    /**
+     * Returns this event's save line, with the start and end times appended.
+     *
+     * @return pipe-delimited save line for this event
+     */
+    @Override
+    public String toSaveFormat() {
+        return super.toSaveFormat() + " | " + this.from + " | " + this.to;
+    }
 }

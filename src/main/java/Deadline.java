@@ -25,4 +25,14 @@ public class Deadline extends Task {
     public String toString() {
         return super.toString() + " (by: " + this.by + ")";
     }
+
+    /**
+     * Returns this deadline's save line, with the due time appended.
+     *
+     * @return pipe-delimited save line for this deadline
+     */
+    @Override
+    public String toSaveFormat() {
+        return super.toSaveFormat() + " | " + this.by;
+    }
 }
