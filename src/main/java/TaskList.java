@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -71,6 +72,27 @@ public class TaskList {
                     .append(i + 1)
                     .append(".")
                     .append(this.tasks.get(i));
+        }
+
+        return builder.toString();
+    }
+
+    /**
+     * Returns a numbered display of tasks that occur on the given date.
+     *
+     * @param date date to filter tasks by
+     * @return formatted list of tasks occurring on the given date, ready to print
+     */
+    public String listOn(LocalDate date) {
+        StringBuilder builder = new StringBuilder(" Here are the tasks on " + date.format(Task.DATE_DISPLAY_FORMAT) + ":");
+        String lineSeparator = System.lineSeparator();
+        int count = 0;
+
+        for (Task task : this.tasks) {
+            if (task.occursOn(date)) {
+                count++;
+                builder.append(lineSeparator).append(" ").append(count).append(".").append(task);
+            }
         }
 
         return builder.toString();

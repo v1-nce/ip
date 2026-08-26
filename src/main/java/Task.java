@@ -1,7 +1,12 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Represents a task entered by the user.
  */
 public abstract class Task {
+    protected static final DateTimeFormatter DATE_DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+    
     private final TaskType type;
     private final String description;
     private boolean isDone;
@@ -61,5 +66,16 @@ public abstract class Task {
      */
     public String toSaveFormat() {
         return this.type.getIcon() + " | " + (this.isDone ? "1" : "0") + " | " + this.description;
+    }
+
+    /**
+     * Checks whether this task occurs on the given date.
+     * A task without a date (e.g. a todo) never occurs on any date.
+     *
+     * @param date date to check
+     * @return true if this task occurs on the given date
+     */
+    public boolean occursOn(LocalDate date) {
+        return false;
     }
 }
