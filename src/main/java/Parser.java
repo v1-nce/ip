@@ -2,10 +2,47 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 /**
- * Makes sense of the raw command text typed by the user: turns it into a
- * new Task, a date, or a task index that Summer can act on.
+ * Makes sense of the raw command text typed by the user: decides which
+ * {@link Command} it represents, and turns command text into the tasks,
+ * dates, and indices those commands need.
  */
 public class Parser {
+    /**
+     * Parses one full line of user input into the command it represents.
+     *
+     * @param fullCommand the raw command line typed by the user
+     * @return the command to execute
+     * @throws SummerException if the command text names an invalid date
+     */
+    public static Command parse(String fullCommand) throws SummerException {
+        if (fullCommand.equals("bye")) {
+            return new ExitCommand();
+        }
+
+        if (fullCommand.equals("list")) {
+            return new ListCommand();
+        }
+
+        if (fullCommand.startsWith("on ")) {
+            LocalDate date = parseDate(fullCommand.substring("on ".length()).trim());
+            return new OnDateCommand(date);
+        }
+
+        if (fullCommand.startsWith("mark ")) {
+            return new MarkCommand(getTaskIndex(fullCommand));
+        }
+
+        if (fullCommand.startsWith("unmark ")) {
+            return new UnmarkCommand(getTaskIndex(fullCommand));
+        }
+
+        if (fullCommand.startsWith("delete ")) {
+            return new DeleteCommand(getTaskIndex(fullCommand));
+        }
+
+        return new AddCommand(fullCommand);
+    }
+
     /**
      * Creates the task type represented by a user command.
      *
@@ -67,7 +104,7 @@ public class Parser {
      * @return parsed date
      * @throws SummerException if the text is not a valid yyyy-mm-dd date
      */
-    static LocalDate parseDate(String text) throws SummerException {
+    private static LocalDate parseDate(String text) throws SummerException {
         try {
             return LocalDate.parse(text);
         } catch (DateTimeParseException e) {
@@ -81,7 +118,7 @@ public class Parser {
      * @param command user command containing a task number after the first space
      * @return zero-based index of the requested task
      */
-    static int getTaskIndex(String command) {
+    private static int getTaskIndex(String command) {
         try {
             return Integer.parseInt(command.substring(command.indexOf(" ") + 1).trim()) - 1;
         } catch (NumberFormatException e) {
