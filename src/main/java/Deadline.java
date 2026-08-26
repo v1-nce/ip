@@ -1,17 +1,19 @@
+import java.time.LocalDate;
+
 /**
- * Represents a task that should be completed by a specific date or time.
+ * Represents a task that should be completed by a specific date.
  */
 public class Deadline extends Task {
-    private final String by;
+    private final LocalDate by;
 
     /**
-     * Creates a deadline task with the given description, due time, and completion status.
+     * Creates a deadline task with the given description, due date, and completion status.
      *
      * @param description text describing the task
-     * @param by date or time by which the task should be completed
+     * @param by date by which the task should be completed
      * @param isDone whether the task is already completed
      */
-    public Deadline(String description, String by, boolean isDone) {
+    public Deadline(String description, LocalDate by, boolean isDone) {
         super(TaskType.DEADLINE, description, isDone);
         this.by = by;
     }
@@ -19,20 +21,31 @@ public class Deadline extends Task {
     /**
      * Returns the display text for this deadline task.
      *
-     * @return task type, status, description, and due time
+     * @return task type, status, description, and due date
      */
     @Override
     public String toString() {
-        return super.toString() + " (by: " + this.by + ")";
+        return super.toString() + " (by: " + this.by.format(DATE_DISPLAY_FORMAT) + ")";
     }
 
     /**
-     * Returns this deadline's save line, with the due time appended.
+     * Returns this deadline's save line, with the due date appended.
      *
      * @return pipe-delimited save line for this deadline
      */
     @Override
     public String toSaveFormat() {
         return super.toSaveFormat() + " | " + this.by;
+    }
+
+    /**
+     * Checks whether the given date is this deadline's due date.
+     *
+     * @param date date to check
+     * @return true if the given date is this deadline's due date
+     */
+    @Override
+    public boolean occursOn(LocalDate date) {
+        return this.by.equals(date);
     }
 }
