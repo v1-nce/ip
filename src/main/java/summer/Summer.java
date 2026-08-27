@@ -1,4 +1,13 @@
+package summer;
+
 import java.nio.file.Path;
+
+import summer.command.Command;
+import summer.parser.Parser;
+import summer.storage.Storage;
+import summer.task.Task;
+import summer.task.TaskList;
+import summer.ui.Ui;
 
 public class Summer {
     private static final int MAX_TASKS = 100;

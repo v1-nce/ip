@@ -1,3 +1,5 @@
+package summer;
+
 /**
  * Represents an error caused by invalid input given to Summer.
  */
