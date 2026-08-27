@@ -2,6 +2,7 @@ package summer.task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 /**
  * Stores the tasks currently known to Summer as a managed list.
@@ -65,18 +66,7 @@ public class TaskList {
      * @return formatted task list ready to print
      */
     public String list() {
-        StringBuilder builder = new StringBuilder(" Here are the tasks in your list:");
-        String lineSeparator = System.lineSeparator();
-
-        for (int i = 0; i < this.tasks.size(); i++) {
-            builder.append(lineSeparator)
-                    .append(" ")
-                    .append(i + 1)
-                    .append(".")
-                    .append(this.tasks.get(i));
-        }
-
-        return builder.toString();
+        return render(" Here are the tasks in your list:", task -> true);
     }
 
     /**
@@ -86,12 +76,35 @@ public class TaskList {
      * @return formatted list of tasks occurring on the given date, ready to print
      */
     public String listOn(LocalDate date) {
-        StringBuilder builder = new StringBuilder(" Here are the tasks on " + date.format(Task.DATE_DISPLAY_FORMAT) + ":");
+        return render(" Here are the tasks on " + date.format(Task.DATE_DISPLAY_FORMAT) + ":",
+                task -> task.occursOn(date));
+    }
+
+    /**
+     * Returns a numbered display of tasks whose description contains the keyword.
+     *
+     * @param keyword text to search for within task descriptions
+     * @return formatted list of matching tasks, ready to print
+     */
+    public String find(String keyword) {
+        return render(" Here are the matching tasks in your list:",
+                task -> task.descriptionContains(keyword));
+    }
+
+    /**
+     * Builds a numbered, printable listing of the tasks accepted by the filter.
+     *
+     * @param header first line of the listing
+     * @param filter decides which tasks are included
+     * @return the header followed by one numbered line per matching task
+     */
+    private String render(String header, Predicate<Task> filter) {
+        StringBuilder builder = new StringBuilder(header);
         String lineSeparator = System.lineSeparator();
         int count = 0;
 
         for (Task task : this.tasks) {
-            if (task.occursOn(date)) {
+            if (filter.test(task)) {
                 count++;
                 builder.append(lineSeparator).append(" ").append(count).append(".").append(task);
             }

@@ -8,6 +8,7 @@ import summer.command.AddCommand;
 import summer.command.Command;
 import summer.command.DeleteCommand;
 import summer.command.ExitCommand;
+import summer.command.FindCommand;
 import summer.command.ListCommand;
 import summer.command.MarkCommand;
 import summer.command.OnDateCommand;
@@ -28,7 +29,7 @@ public class Parser {
      *
      * @param fullCommand the raw command line typed by the user
      * @return the command to execute
-     * @throws SummerException if the command text names an invalid date
+     * @throws SummerException if the command names an invalid date or omits a required keyword
      */
     public static Command parse(String fullCommand) throws SummerException {
         if (fullCommand.equals("bye")) {
@@ -54,6 +55,14 @@ public class Parser {
 
         if (fullCommand.startsWith("delete ")) {
             return new DeleteCommand(getTaskIndex(fullCommand));
+        }
+
+        if (fullCommand.startsWith("find ")) {
+            String keyword = fullCommand.substring("find ".length()).trim();
+            if (keyword.isEmpty()) {
+                throw new SummerException("Please tell me what keyword to search for.");
+            }
+            return new FindCommand(keyword);
         }
 
         return new AddCommand(fullCommand);
