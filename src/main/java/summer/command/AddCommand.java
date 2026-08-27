@@ -17,10 +17,17 @@ import summer.ui.Ui;
 public class AddCommand extends Command {
     private final String rawCommand;
 
+    /**
+     * Creates the command.
+     *
+     * @param rawCommand the full command line; the task it describes is
+     *                   parsed when this command executes
+     */
     public AddCommand(String rawCommand) {
         this.rawCommand = rawCommand;
     }
 
+    /** Parses the task from the command line and adds it, unless the list is full. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws SummerException {
         if (tasks.isFull()) {

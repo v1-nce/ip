@@ -9,6 +9,11 @@ import summer.task.Task;
 import summer.task.TaskList;
 import summer.ui.Ui;
 
+/**
+ * Entry point of the Summer chatbot. Wires together the {@link Ui},
+ * {@link Storage}, and {@link TaskList}, then runs the read-parse-execute
+ * loop until the user types {@code bye} or input ends.
+ */
 public class Summer {
     private static final int MAX_TASKS = 100;
     private static final Path DATA_FILE_PATH = Path.of("data", "summer.txt");
