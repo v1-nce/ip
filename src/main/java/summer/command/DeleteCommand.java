@@ -9,10 +9,16 @@ import summer.ui.Ui;
 public class DeleteCommand extends Command {
     private final int taskIndex;
 
+    /**
+     * Creates the command.
+     *
+     * @param taskIndex zero-based index of the task to remove
+     */
     public DeleteCommand(int taskIndex) {
         this.taskIndex = taskIndex;
     }
 
+    /** Removes the task at the stored index, or reports it if the index is invalid. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         if (!tasks.hasTaskAt(this.taskIndex)) {

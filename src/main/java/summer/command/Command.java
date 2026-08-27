@@ -10,6 +10,14 @@ import summer.ui.Ui;
  * saving via {@link Storage} if it changed the list.
  */
 public abstract class Command {
+    /**
+     * Runs this command against the task list.
+     *
+     * @param tasks the task list to read or modify
+     * @param ui used to report the outcome to the user
+     * @param storage used to persist the list if this command changes it
+     * @throws SummerException if the command cannot be carried out
+     */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws SummerException;
 
     /**
