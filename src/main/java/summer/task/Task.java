@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
  */
 public abstract class Task {
     protected static final DateTimeFormatter DATE_DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
-    
+
     private final TaskType type;
     private final String description;
     private boolean isDone;
