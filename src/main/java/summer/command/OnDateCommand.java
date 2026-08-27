@@ -1,4 +1,10 @@
+package summer.command;
+
 import java.time.LocalDate;
+
+import summer.storage.Storage;
+import summer.task.TaskList;
+import summer.ui.Ui;
 
 /** The "on DATE" command: shows every task that occurs on the given date. */
 public class OnDateCommand extends Command {

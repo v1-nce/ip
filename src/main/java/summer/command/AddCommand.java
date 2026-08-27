@@ -1,3 +1,12 @@
+package summer.command;
+
+import summer.SummerException;
+import summer.parser.Parser;
+import summer.storage.Storage;
+import summer.task.Task;
+import summer.task.TaskList;
+import summer.ui.Ui;
+
 /**
  * Adds a new task (todo, deadline, or event).
  *

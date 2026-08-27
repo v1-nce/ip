@@ -1,5 +1,21 @@
+package summer.parser;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
+import summer.SummerException;
+import summer.command.AddCommand;
+import summer.command.Command;
+import summer.command.DeleteCommand;
+import summer.command.ExitCommand;
+import summer.command.ListCommand;
+import summer.command.MarkCommand;
+import summer.command.OnDateCommand;
+import summer.command.UnmarkCommand;
+import summer.task.Deadline;
+import summer.task.Event;
+import summer.task.Task;
+import summer.task.ToDo;
 
 /**
  * Makes sense of the raw command text typed by the user: decides which
@@ -50,7 +66,7 @@ public class Parser {
      * @return task represented by the command
      * @throws SummerException if the command is unknown or missing required details
      */
-    static Task createTask(String command) throws SummerException {
+    public static Task createTask(String command) throws SummerException {
         if (command.equals("todo") || command.startsWith("todo ")) {
             String description = command.substring("todo".length()).trim();
             if (description.isEmpty()) {

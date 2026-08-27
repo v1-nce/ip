@@ -1,3 +1,10 @@
+package summer.command;
+
+import summer.storage.Storage;
+import summer.task.Task;
+import summer.task.TaskList;
+import summer.ui.Ui;
+
 /** The "mark INDEX" command: marks a task as done. */
 public class MarkCommand extends Command {
     private final int taskIndex;

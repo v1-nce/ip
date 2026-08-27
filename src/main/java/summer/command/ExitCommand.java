@@ -1,3 +1,9 @@
+package summer.command;
+
+import summer.storage.Storage;
+import summer.task.TaskList;
+import summer.ui.Ui;
+
 /** The "bye" command: says goodbye and ends the chatbot. */
 public class ExitCommand extends Command {
     @Override
