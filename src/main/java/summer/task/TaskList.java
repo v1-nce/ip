@@ -86,7 +86,8 @@ public class TaskList {
      * @return formatted list of tasks occurring on the given date, ready to print
      */
     public String listOn(LocalDate date) {
-        StringBuilder builder = new StringBuilder(" Here are the tasks on " + date.format(Task.DATE_DISPLAY_FORMAT) + ":");
+        StringBuilder builder = new StringBuilder(
+                " Here are the tasks on " + date.format(Task.DATE_DISPLAY_FORMAT) + ":");
         String lineSeparator = System.lineSeparator();
         int count = 0;
 

@@ -97,7 +97,8 @@ public class Parser {
             int fromIndex = details.indexOf(" /from ");
             int toIndex = details.indexOf(" /to ");
             if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
-                throw new SummerException("An event needs this format: event DESCRIPTION /from START /to END");
+                throw new SummerException(
+                        "An event needs this format: event DESCRIPTION /from START /to END");
             }
 
             String description = details.substring(0, fromIndex).trim();
