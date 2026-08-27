@@ -1,4 +1,8 @@
+package summer.ui;
+
 import java.util.Scanner;
+
+import summer.task.Task;
 
 /**
  * Handles all interaction between Summer and the user: reading command
