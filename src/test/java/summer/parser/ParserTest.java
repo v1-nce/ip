@@ -11,6 +11,7 @@ import summer.SummerException;
 import summer.command.AddCommand;
 import summer.command.DeleteCommand;
 import summer.command.ExitCommand;
+import summer.command.FindCommand;
 import summer.command.ListCommand;
 import summer.command.MarkCommand;
 import summer.command.OnDateCommand;
@@ -137,5 +138,15 @@ public class ParserTest {
     public void parse_unrecognisedInput_fallsThroughToAddCommand() throws SummerException {
         assertInstanceOf(AddCommand.class, Parser.parse("todo read"));
         assertInstanceOf(AddCommand.class, Parser.parse("not a real command"));
+    }
+
+    @Test
+    public void parse_find_returnsFindCommand() throws SummerException {
+        assertInstanceOf(FindCommand.class, Parser.parse("find book"));
+    }
+
+    @Test
+    public void parse_findWithoutKeyword_throws() {
+        assertThrows(SummerException.class, () -> Parser.parse("find "));
     }
 }
