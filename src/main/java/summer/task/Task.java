@@ -80,4 +80,14 @@ public abstract class Task {
     public boolean occursOn(LocalDate date) {
         return false;
     }
+
+    /**
+     * Checks whether this task's description contains the given keyword.
+     *
+     * @param keyword text to search for within the description
+     * @return true if the description contains the keyword
+     */
+    public boolean descriptionContains(String keyword) {
+        return this.description.contains(keyword);
+    }
 }

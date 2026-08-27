@@ -84,4 +84,28 @@ public class TaskListTest {
         assertSame(a, list.get(0));
         assertSame(c, list.get(1));
     }
+
+    // ---------- find ----------
+
+    @Test
+    public void find_keywordInSomeDescriptions_listsOnlyMatchingTasks() {
+        TaskList list = new TaskList(100);
+        list.add(todo("read book"));
+        list.add(todo("return book"));
+        list.add(todo("buy milk"));
+
+        String result = list.find("book");
+
+        assertTrue(result.contains("read book"));
+        assertTrue(result.contains("return book"));
+        assertFalse(result.contains("milk"));
+    }
+
+    @Test
+    public void find_noMatchingDescription_listsHeaderOnly() {
+        TaskList list = new TaskList(100);
+        list.add(todo("read book"));
+
+        assertEquals(" Here are the matching tasks in your list:", list.find("xyz"));
+    }
 }
