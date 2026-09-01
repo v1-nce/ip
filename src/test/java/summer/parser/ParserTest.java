@@ -86,14 +86,14 @@ public class ParserTest {
 
     @Test
     public void createTask_eventFromMarkerAfterToMarker_throws() {
-        assertThrows(SummerException.class,
-                () -> Parser.createTask("event camp /to 2019-10-17 /from 2019-10-15"));
+        assertThrows(SummerException.class, () ->
+                Parser.createTask("event camp /to 2019-10-17 /from 2019-10-15"));
     }
 
     @Test
     public void createTask_eventInvalidDate_throws() {
-        assertThrows(SummerException.class,
-                () -> Parser.createTask("event camp /from 2019-10-15 /to someday"));
+        assertThrows(SummerException.class, () ->
+                Parser.createTask("event camp /from 2019-10-15 /to someday"));
     }
 
     // ---------- createTask: unknown ----------
