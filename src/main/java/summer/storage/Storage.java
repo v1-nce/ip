@@ -92,14 +92,14 @@ public class Storage {
             String description = parts[2];
 
             switch (parts[0]) {
-            case "T":
-                return new ToDo(description, isDone);
-            case "D":
-                return new Deadline(description, LocalDate.parse(parts[3]), isDone);
-            case "E":
-                return new Event(description, LocalDate.parse(parts[3]), LocalDate.parse(parts[4]), isDone);
-            default:
-                return null;
+                case "T":
+                    return new ToDo(description, isDone);
+                case "D":
+                    return new Deadline(description, LocalDate.parse(parts[3]), isDone);
+                case "E":
+                    return new Event(description, LocalDate.parse(parts[3]), LocalDate.parse(parts[4]), isDone);
+                default:
+                    return null;
             }
         } catch (ArrayIndexOutOfBoundsException | DateTimeParseException e) {
             return null;
