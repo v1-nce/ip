@@ -47,8 +47,7 @@ public class Ui {
     public void showWelcome() {
         showLine();
         System.out.println(BANNER);
-        emit("Hello! I'm Summer.");
-        emit("What can I do for you?");
+        emit("Hello! I'm Summer.", "What can I do for you?");
     }
 
     /**
@@ -87,33 +86,33 @@ public class Ui {
 
     /** Prints confirmation that {@code task} was added; {@code taskCount} is the new list size. */
     public void showTaskAdded(Task task, int taskCount) {
-        emit(" Got it. I've added this task:");
-        emit("   " + task);
-        emit(" Now you have " + taskCount + " tasks in the list.");
+        emit(" Got it. I've added this task:",
+                "   " + task,
+                " Now you have " + taskCount + " tasks in the list.");
     }
 
     /** Prints confirmation that {@code task} was removed; {@code taskCount} is the new list size. */
     public void showTaskDeleted(Task task, int taskCount) {
-        emit(" Noted. I've removed this task:");
-        emit("   " + task);
-        emit(" Now you have " + taskCount + " tasks in the list.");
+        emit(" Noted. I've removed this task:",
+                "   " + task,
+                " Now you have " + taskCount + " tasks in the list.");
     }
 
     /** Prints confirmation that {@code task} was marked done. */
     public void showTaskMarked(Task task) {
-        emit(" Nice! I've marked this task as done:");
-        emit("   " + task);
+        emit(" Nice! I've marked this task as done:", "   " + task);
     }
 
     /** Prints confirmation that {@code task} was marked not done. */
     public void showTaskUnmarked(Task task) {
-        emit(" OK, I've marked this task as not done yet:");
-        emit("   " + task);
+        emit(" OK, I've marked this task as not done yet:", "   " + task);
     }
 
-    /** Prints one line to standard output and records it in the response buffer. */
-    private void emit(String line) {
-        System.out.println(line);
-        this.buffer.append(line).append(System.lineSeparator());
+    /** Prints each line to standard output and records it in the response buffer. */
+    private void emit(String... lines) {
+        for (String line : lines) {
+            System.out.println(line);
+            this.buffer.append(line).append(System.lineSeparator());
+        }
     }
 }
