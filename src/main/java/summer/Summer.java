@@ -10,42 +10,75 @@ import summer.task.TaskList;
 import summer.ui.Ui;
 
 /**
- * Entry point of the Summer chatbot. Wires together the {@link Ui},
- * {@link Storage}, and {@link TaskList}, then runs the read-parse-execute
- * loop until the user types {@code bye} or input ends.
+ * The Summer chatbot. Wires together the {@link Ui}, {@link Storage}, and
+ * {@link TaskList}.
+ *
+ * <p>{@link #main} runs the read-parse-execute loop against standard input; the
+ * GUI instead creates a {@code Summer} and calls {@link #getResponse} per message.
  */
 public class Summer {
     private static final int MAX_TASKS = 100;
     private static final Path DATA_FILE_PATH = Path.of("data", "summer.txt");
 
+    private final Ui ui;
+    private final Storage storage;
+    private final TaskList tasks;
+    private boolean isExit;
+
+    /** Creates a chatbot that loads its tasks from the default save file. */
+    public Summer() {
+        this.ui = new Ui();
+        this.storage = new Storage(DATA_FILE_PATH);
+        this.tasks = new TaskList(MAX_TASKS);
+        for (Task task : this.storage.load()) {
+            this.tasks.add(task);
+        }
+    }
+
     /**
-     * Starts the chatbot, stores each task, lists saved tasks, and exits on bye.
+     * Runs one line of user input and returns Summer's reply.
+     *
+     * @param input one line of user input
+     * @return the reply text to show the user
+     */
+    public String getResponse(String input) {
+        try {
+            Command command = Parser.parse(input);
+            command.execute(this.tasks, this.ui, this.storage);
+            this.isExit = command.isExit();
+        } catch (SummerException e) {
+            this.ui.showError(e.getMessage());
+        }
+        return this.ui.flush();
+    }
+
+    /**
+     * Returns whether the last {@link #getResponse} call was the {@code bye}
+     * command. The GUI uses this to close its window after showing the goodbye.
+     *
+     * @return true if the user has just exited
+     */
+    public boolean isExit() {
+        return this.isExit;
+    }
+
+    /**
+     * Starts the text-based chatbot: reads commands from standard input and
+     * runs them until the user types {@code bye} or input ends.
      *
      * @param args command line arguments, not used by this program
      */
     public static void main(String[] args) {
-        Ui ui = new Ui();
-        Storage storage = new Storage(DATA_FILE_PATH);
-        TaskList tasks = new TaskList(MAX_TASKS);
-        // Load tasks from disk
-        for (Task task : storage.load()) {
-            tasks.add(task);
-        }
+        Summer summer = new Summer();
+        Ui ui = summer.ui;
 
         ui.showWelcome();
-        boolean isExit = false;
+
         String fullCommand;
-        while (!isExit && (fullCommand = ui.readCommand()) != null) {
+        while (!summer.isExit && (fullCommand = ui.readCommand()) != null) {
             ui.showLine();
-            try {
-                Command command = Parser.parse(fullCommand);
-                command.execute(tasks, ui, storage);
-                isExit = command.isExit();
-            } catch (SummerException e) {
-                ui.showError(e.getMessage());
-            } finally {
-                ui.showLine();
-            }
+            summer.getResponse(fullCommand); // prints as it goes; the returned copy is for the GUI
+            ui.showLine();
         }
         ui.close();
     }
