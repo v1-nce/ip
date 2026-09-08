@@ -35,6 +35,10 @@ public class AddCommand extends Command {
             return;
         }
         Task task = Parser.createTask(this.rawCommand);
+        // createTask either returns a task or throws SummerException; it never
+        // returns null.
+        assert task != null : "parser returned a null task";
+
         tasks.add(task);
         storage.save(tasks);
         ui.showTaskAdded(task, tasks.size());

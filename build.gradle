@@ -45,6 +45,9 @@ dependencies {
 test {
     useJUnitPlatform()
 
+    // Run assertions during tests so violated assumptions fail the build.
+    enableAssertions = true
+
     testLogging {
         events 'passed', 'skipped', 'failed'
 
@@ -73,4 +76,7 @@ shadowJar {
 
 run {
     standardInput = System.in
+
+    // Run assertions when launching the app via `gradle run`.
+    enableAssertions = true
 }
