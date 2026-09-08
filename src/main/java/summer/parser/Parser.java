@@ -32,6 +32,10 @@ public class Parser {
      * @throws SummerException if the command names an invalid date or omits a required keyword
      */
     public static Command parse(String fullCommand) throws SummerException {
+        // Summer never passes null here: the text loop and GUI both hand over
+        // a real (possibly empty) line.
+        assert fullCommand != null : "command text must not be null";
+
         if (fullCommand.equals("bye")) {
             return new ExitCommand();
         }
@@ -92,8 +96,13 @@ public class Parser {
                 throw new SummerException("A deadline needs this format: deadline DESCRIPTION /by WHEN");
             }
 
+            // indexOf found " /by " within details, so the text after it is a
+            // valid (possibly empty) substring range.
+            int byValueStart = byIndex + " /by ".length();
+            assert byValueStart <= details.length() : "/by offset ran past the command text";
+
             String description = details.substring(0, byIndex).trim();
-            String by = details.substring(byIndex + " /by ".length()).trim();
+            String by = details.substring(byValueStart).trim();
             if (description.isEmpty() || by.isEmpty()) {
                 throw new SummerException("A deadline needs both a description and a /by value.");
             }
@@ -109,6 +118,10 @@ public class Parser {
                 throw new SummerException(
                         "An event needs this format: event DESCRIPTION /from START /to END");
             }
+
+            // fromIndex < toIndex was just checked, so " /from " ends before
+            // " /to " begins and both substring ranges below are valid.
+            assert fromIndex + " /from ".length() <= toIndex : "/from section overlaps /to";
 
             String description = details.substring(0, fromIndex).trim();
             String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
