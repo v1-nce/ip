@@ -2,6 +2,7 @@ package summer.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
  * Represents a task entered by the user.
@@ -94,5 +95,16 @@ public abstract class Task {
      */
     public boolean descriptionContains(String keyword) {
         return this.description.contains(keyword);
+    }
+
+    /**
+     * Returns the date used to order this task when sorting, if it has one.
+     * A task without a date (e.g. a todo) returns an empty optional and is
+     * ordered after all dated tasks.
+     *
+     * @return this task's sort date, or empty if it has none
+     */
+    public Optional<LocalDate> sortKey() {
+        return Optional.empty();
     }
 }

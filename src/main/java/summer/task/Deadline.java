@@ -1,6 +1,7 @@
 package summer.task;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Represents a task that should be completed by a specific date.
@@ -49,5 +50,15 @@ public class Deadline extends Task {
     @Override
     public boolean occursOn(LocalDate date) {
         return this.by.equals(date);
+    }
+
+    /**
+     * Returns this deadline's due date, used to order it when sorting.
+     *
+     * @return the due date
+     */
+    @Override
+    public Optional<LocalDate> sortKey() {
+        return Optional.of(this.by);
     }
 }
