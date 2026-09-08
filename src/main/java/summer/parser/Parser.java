@@ -12,6 +12,7 @@ import summer.command.FindCommand;
 import summer.command.ListCommand;
 import summer.command.MarkCommand;
 import summer.command.OnDateCommand;
+import summer.command.SortCommand;
 import summer.command.UnmarkCommand;
 import summer.task.Deadline;
 import summer.task.Event;
@@ -42,6 +43,10 @@ public class Parser {
 
         if (fullCommand.equals("list")) {
             return new ListCommand();
+        }
+
+        if (fullCommand.equals("sort")) {
+            return new SortCommand();
         }
 
         if (fullCommand.startsWith("on ")) {

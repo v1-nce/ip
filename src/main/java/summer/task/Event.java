@@ -1,6 +1,7 @@
 package summer.task;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Represents a task that starts and ends on specific dates.
@@ -53,5 +54,15 @@ public class Event extends Task {
     @Override
     public boolean occursOn(LocalDate date) {
         return !date.isBefore(this.from) && !date.isAfter(this.to);
+    }
+
+    /**
+     * Returns this event's start date, used to order it when sorting.
+     *
+     * @return the start date
+     */
+    @Override
+    public Optional<LocalDate> sortKey() {
+        return Optional.of(this.from);
     }
 }

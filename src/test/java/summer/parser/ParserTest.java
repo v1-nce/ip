@@ -15,6 +15,7 @@ import summer.command.FindCommand;
 import summer.command.ListCommand;
 import summer.command.MarkCommand;
 import summer.command.OnDateCommand;
+import summer.command.SortCommand;
 import summer.command.UnmarkCommand;
 
 /**
@@ -115,6 +116,11 @@ public class ParserTest {
     @Test
     public void parse_list_returnsListCommand() throws SummerException {
         assertInstanceOf(ListCommand.class, Parser.parse("list"));
+    }
+
+    @Test
+    public void parse_sort_returnsSortCommand() throws SummerException {
+        assertInstanceOf(SortCommand.class, Parser.parse("sort"));
     }
 
     @Test

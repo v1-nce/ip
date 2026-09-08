@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -83,6 +85,46 @@ public class TaskListTest {
         assertEquals(2, list.size());
         assertSame(a, list.get(0));
         assertSame(c, list.get(1));
+    }
+
+    // ---------- sort ----------
+
+    @Test
+    public void sort_mixedTasks_ordersDatedTasksChronologicallyThenTodos() {
+        TaskList list = new TaskList(100);
+        list.add(new Deadline("submit", LocalDate.of(2019, 10, 20), false));
+        list.add(todo("read book"));
+        list.add(new Event("camp", LocalDate.of(2019, 10, 10), LocalDate.of(2019, 10, 12), false));
+        list.add(new Deadline("pay bill", LocalDate.of(2019, 10, 15), false));
+
+        list.sort();
+
+        String order = list.list();
+        assertTrue(order.indexOf("camp") < order.indexOf("pay bill"));
+        assertTrue(order.indexOf("pay bill") < order.indexOf("submit"));
+        assertTrue(order.indexOf("submit") < order.indexOf("read book"));
+    }
+
+    @Test
+    public void sort_equalDates_keepsOriginalOrder() {
+        Task first = new Deadline("first", LocalDate.of(2019, 1, 1), false);
+        Task second = new Deadline("second", LocalDate.of(2019, 1, 1), false);
+        TaskList list = new TaskList(100);
+        list.add(first);
+        list.add(second);
+
+        list.sort();
+
+        assertSame(first, list.get(0));
+        assertSame(second, list.get(1));
+    }
+
+    @Test
+    public void sort_returnValue_usesSortedHeader() {
+        TaskList list = new TaskList(100);
+        list.add(todo("a"));
+
+        assertTrue(list.sort().startsWith(" Here are the tasks in your list, sorted:"));
     }
 
     // ---------- find ----------
