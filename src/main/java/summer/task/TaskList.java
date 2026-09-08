@@ -2,6 +2,7 @@ package summer.task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.function.Predicate;
 
 /**
@@ -101,6 +102,23 @@ public class TaskList {
     public String find(String keyword) {
         return render(" Here are the matching tasks in your list:",
                 task -> task.descriptionContains(keyword));
+    }
+
+    /**
+     * Sorts the tasks in place by date, earliest first. Dated tasks
+     * ({@code Deadline}, {@code Event}) come before undated ones
+     * ({@code ToDo}); tasks that compare equal keep their existing order.
+     *
+     * @return a numbered display of the tasks in their new order, ready to print
+     */
+    public String sort() {
+        // Optional has no natural ordering, so compare on a sentinel far-future
+        // date for the undated tasks; this parks them after every dated task
+        // while keeping the sort stable among themselves.
+        LocalDate undated = LocalDate.MAX;
+        this.tasks.sort(Comparator.comparing(task -> task.sortKey().orElse(undated)));
+
+        return render(" Here are the tasks in your list, sorted:", task -> true);
     }
 
     /**
