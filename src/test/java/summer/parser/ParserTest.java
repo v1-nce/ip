@@ -125,6 +125,13 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_markUnmarkDeleteWithNonNumber_throws() {
+        assertThrows(SummerException.class, () -> Parser.parse("mark two"));
+        assertThrows(SummerException.class, () -> Parser.parse("unmark "));
+        assertThrows(SummerException.class, () -> Parser.parse("delete last"));
+    }
+
+    @Test
     public void parse_onValidDate_returnsOnDateCommand() throws SummerException {
         assertInstanceOf(OnDateCommand.class, Parser.parse("on 2019-10-15"));
     }

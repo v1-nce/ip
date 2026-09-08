@@ -50,15 +50,15 @@ public class Parser {
         }
 
         if (fullCommand.startsWith("mark ")) {
-            return new MarkCommand(getTaskIndex(fullCommand));
+            return new MarkCommand(parseTaskNumber(fullCommand));
         }
 
         if (fullCommand.startsWith("unmark ")) {
-            return new UnmarkCommand(getTaskIndex(fullCommand));
+            return new UnmarkCommand(parseTaskNumber(fullCommand));
         }
 
         if (fullCommand.startsWith("delete ")) {
-            return new DeleteCommand(getTaskIndex(fullCommand));
+            return new DeleteCommand(parseTaskNumber(fullCommand));
         }
 
         if (fullCommand.startsWith("find ")) {
@@ -152,16 +152,19 @@ public class Parser {
     }
 
     /**
-     * Returns the zero-based task index from a command.
+     * Parses the task number that follows a command word (e.g. the {@code 2} in
+     * {@code delete 2}) and converts it to a zero-based index.
      *
-     * @param command user command containing a task number after the first space
+     * @param command user command with a task number after the first space
      * @return zero-based index of the requested task
+     * @throws SummerException if the text after the command word is not a number
      */
-    private static int getTaskIndex(String command) {
+    private static int parseTaskNumber(String command) throws SummerException {
+        String argument = command.substring(command.indexOf(" ") + 1).trim();
         try {
-            return Integer.parseInt(command.substring(command.indexOf(" ") + 1).trim()) - 1;
+            return Integer.parseInt(argument) - 1;
         } catch (NumberFormatException e) {
-            return -1;
+            throw new SummerException("Please give a task number, e.g. delete 2.");
         }
     }
 }
