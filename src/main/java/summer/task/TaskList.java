@@ -17,6 +17,10 @@ public class TaskList {
      * @param capacity maximum number of tasks this list can store
      */
     public TaskList(int capacity) {
+        // A non-positive capacity would make isFull() either always or never true,
+        // breaking AddCommand. Every caller passes a fixed positive constant.
+        assert capacity > 0 : "task list capacity must be positive, was " + capacity;
+
         this.tasks = new ArrayList<>();
         this.capacity = capacity;
     }
@@ -37,6 +41,10 @@ public class TaskList {
      * @return task at the given index
      */
     public Task get(int index) {
+        // Callers (MarkCommand, UnmarkCommand, ...) always check hasTaskAt first,
+        // so a valid index is a precondition of this method.
+        assert hasTaskAt(index) : "no task at index " + index;
+
         return this.tasks.get(index);
     }
 
@@ -47,6 +55,10 @@ public class TaskList {
      * @return removed task
      */
     public Task delete(int index) {
+        // DeleteCommand always checks hasTaskAt first, so a valid index is a
+        // precondition of this method.
+        assert hasTaskAt(index) : "no task at index " + index;
+
         return this.tasks.remove(index);
     }
 
@@ -109,6 +121,10 @@ public class TaskList {
                 builder.append(lineSeparator).append(" ").append(count).append(".").append(task);
             }
         }
+
+        // The filter can only ever accept tasks that are in the list, so the
+        // number rendered must never exceed the number stored.
+        assert count <= this.tasks.size() : "rendered more tasks than are stored";
 
         return builder.toString();
     }

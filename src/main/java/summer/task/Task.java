@@ -21,6 +21,11 @@ public abstract class Task {
      * @param isDone whether the task is already completed
      */
     public Task(TaskType type, String description, boolean isDone) {
+        // Parser rejects empty descriptions and Storage skips blank save lines,
+        // so any task that reaches this point has a real description.
+        assert type != null : "task type must not be null";
+        assert description != null && !description.isBlank() : "task description must not be blank";
+
         this.type = type;
         this.description = description;
         this.isDone = isDone;
