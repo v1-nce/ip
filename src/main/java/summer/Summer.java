@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import summer.command.Command;
 import summer.parser.Parser;
 import summer.storage.Storage;
-import summer.task.Task;
 import summer.task.TaskList;
 import summer.ui.Ui;
 
@@ -30,9 +29,7 @@ public class Summer {
         this.ui = new Ui();
         this.storage = new Storage(DATA_FILE_PATH);
         this.tasks = new TaskList(MAX_TASKS);
-        for (Task task : this.storage.load()) {
-            this.tasks.add(task);
-        }
+        this.storage.load().forEach(this.tasks::add);
     }
 
     /**

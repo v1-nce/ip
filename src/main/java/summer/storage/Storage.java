@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import summer.task.Deadline;
 import summer.task.Event;
@@ -38,22 +40,19 @@ public class Storage {
      * @return tasks read from disk, in file order
      */
     public List<Task> load() {
-        List<Task> tasks = new ArrayList<>();
         if (!Files.exists(this.filePath)) {
-            return tasks;
+            return new ArrayList<>();
         }
 
         try {
-            for (String line : Files.readAllLines(this.filePath)) {
-                Task task = parseTask(line);
-                if (task != null) {
-                    tasks.add(task);
-                }
-            }
+            return Files.readAllLines(this.filePath).stream()
+                    .map(this::parseTask)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toCollection(ArrayList::new));
         } catch (IOException e) {
             System.out.println(" Could not read saved tasks: " + e.getMessage());
+            return new ArrayList<>();
         }
-        return tasks;
     }
 
     /**
