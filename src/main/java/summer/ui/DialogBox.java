@@ -38,6 +38,16 @@ public class DialogBox extends HBox {
         displayPicture.setImage(img);
     }
 
+    /** Styles this dialog box as the user's own message (right-aligned, accent color). */
+    public void markAsUser() {
+        dialog.getStyleClass().add("user-dialog-label");
+    }
+
+    /** Styles this dialog box as an error reply. */
+    public void markAsError() {
+        dialog.getStyleClass().add("error-dialog");
+    }
+
     /** Puts the picture on the left and the text on the right. */
     private void flip() {
         ObservableList<Node> children = FXCollections.observableArrayList(getChildren());
@@ -54,7 +64,9 @@ public class DialogBox extends HBox {
      * @return the dialog box
      */
     public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+        DialogBox db = new DialogBox(text, img);
+        db.markAsUser();
+        return db;
     }
 
     /**
