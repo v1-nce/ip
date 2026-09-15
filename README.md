@@ -1,6 +1,6 @@
 # Summer project template
 
-This is a project template for a greenfield Java project.It's named after the Java mascot _Summer_. Given below are instructions on how to use it.
+This is a project template for a greenfield Java project. The chatbot built on top of it is named _Summer_. Given below are instructions on how to use it.
 
 ## Setting up in Intellij
 

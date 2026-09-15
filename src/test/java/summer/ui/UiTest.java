@@ -29,16 +29,16 @@ public class UiTest {
         ui.showTaskAdded(new ToDo("read book", false), 1);
 
         String response = ui.flush();
-        assertTrue(response.contains("added this task"));
+        assertTrue(response.contains("on the board"));
         assertTrue(response.contains("[T][ ] read book"));
         assertTrue(response.contains("1 tasks"));
     }
 
     @Test
-    public void flush_afterShowError_usesOopsFormat() {
+    public void flush_afterShowError_usesWipeoutFormat() {
         Ui ui = new Ui();
         ui.showError("bad input");
 
-        assertTrue(ui.flush().contains("OOPS!!! bad input"));
+        assertTrue(ui.flush().contains("Whoa, wipeout. bad input"));
     }
 }
