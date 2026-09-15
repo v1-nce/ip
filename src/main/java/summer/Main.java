@@ -23,6 +23,8 @@ public class Main extends Application {
             AnchorPane root = fxmlLoader.load();
             stage.setScene(new Scene(root));
             stage.setTitle("Summer");
+            stage.setMinWidth(320);
+            stage.setMinHeight(400);
             fxmlLoader.<MainWindow>getController().setSummer(this.summer);
             stage.show();
         } catch (IOException e) {

@@ -8,19 +8,20 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="400.0"
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="summer.ui.MainWindow">
+            fx:controller="summer.ui.MainWindow" stylesheets="@summer.css" styleClass="root-pane">
     <children>
-        <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER"
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" styleClass="chat-scroll"
                     AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="42.0">
+                    AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="48.0">
             <content>
-                <VBox fx:id="dialogContainer" />
+                <VBox fx:id="dialogContainer" styleClass="dialog-container" />
             </content>
         </ScrollPane>
-        <TextField fx:id="userInput" onAction="#handleUserInput" prefHeight="41.0"
-                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="76.0" AnchorPane.bottomAnchor="0.0" />
-        <Button mnemonicParsing="false" onAction="#handleUserInput" prefHeight="41.0" prefWidth="76.0"
-                text="Send"
+        <TextField fx:id="userInput" onAction="#handleUserInput" prefHeight="48.0" styleClass="user-input"
+                   promptText="Type a command..."
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="84.0" AnchorPane.bottomAnchor="0.0" />
+        <Button mnemonicParsing="false" onAction="#handleUserInput" prefHeight="48.0" prefWidth="84.0"
+                text="Send" styleClass="send-button"
                 AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" />
     </children>
 </AnchorPane>
