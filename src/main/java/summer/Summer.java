@@ -23,6 +23,7 @@ public class Summer {
     private final Storage storage;
     private final TaskList tasks;
     private boolean isExit;
+    private boolean isError;
 
     /** Creates a chatbot that loads its tasks from the default save file. */
     public Summer() {
@@ -39,12 +40,14 @@ public class Summer {
      * @return the reply text to show the user
      */
     public String getResponse(String input) {
+        this.isError = false;
         try {
             Command command = Parser.parse(input);
             command.execute(this.tasks, this.ui, this.storage);
             this.isExit = command.isExit();
         } catch (SummerException e) {
             this.ui.showError(e.getMessage());
+            this.isError = true;
         }
         return this.ui.flush();
     }
@@ -57,6 +60,16 @@ public class Summer {
      */
     public boolean isExit() {
         return this.isExit;
+    }
+
+    /**
+     * Returns whether the last {@link #getResponse} call failed with a
+     * {@link SummerException}. The GUI uses this to highlight error replies.
+     *
+     * @return true if the last input caused an error
+     */
+    public boolean isError() {
+        return this.isError;
     }
 
     /**
