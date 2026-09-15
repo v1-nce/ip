@@ -26,8 +26,8 @@ public class MainWindow {
 
     private Summer summer;
 
-    private final Image userImage = new Image(getClass().getResourceAsStream("/images/DaUser.png"));
-    private final Image summerImage = new Image(getClass().getResourceAsStream("/images/DaSummer.png"));
+    private final Image userImage = new Image(getClass().getResourceAsStream("/images/cartman.png"));
+    private final Image summerImage = new Image(getClass().getResourceAsStream("/images/summer.png"));
 
     /** Keeps the scroll pane pinned to the newest message. */
     @FXML
@@ -56,9 +56,13 @@ public class MainWindow {
             return;
         }
         String response = summer.getResponse(input);
+        DialogBox summerDialog = DialogBox.getSummerDialog(response, summerImage);
+        if (summer.isError()) {
+            summerDialog.markAsError();
+        }
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getSummerDialog(response, summerImage));
+                summerDialog);
         userInput.clear();
 
         if (summer.isExit()) {
