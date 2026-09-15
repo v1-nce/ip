@@ -47,7 +47,7 @@ public class Ui {
     public void showWelcome() {
         showLine();
         System.out.println(BANNER);
-        emit("Hello! I'm Summer.", "What can I do for you?");
+        emit("Hey hey, Summer here.", "What's the move today?");
     }
 
     /**
@@ -66,12 +66,12 @@ public class Ui {
 
     /** Prints the farewell message shown when the user exits. */
     public void showGoodbye() {
-        emit(" Goodbye! Have an amazing day ahead!");
+        emit(" Catch you later, don't forget the sunscreen!");
     }
 
-    /** Prints {@code message} prefixed with "OOPS!!!", Summer's error format. */
+    /** Prints {@code message} prefixed with "Whoa, wipeout.", Summer's error format. */
     public void showError(String message) {
-        emit(" OOPS!!! " + message);
+        emit(" Whoa, wipeout. " + message);
     }
 
     /** Prints a message as-is, e.g. a pre-formatted task listing. */
@@ -81,31 +81,31 @@ public class Ui {
 
     /** Prints the message shown when a task number given by the user does not exist. */
     public void showTaskNotFound() {
-        emit(" Sorry, that task number does not exist!");
+        emit(" No task riding at that number, try again.");
     }
 
     /** Prints confirmation that {@code task} was added; {@code taskCount} is the new list size. */
     public void showTaskAdded(Task task, int taskCount) {
-        emit(" Got it. I've added this task:",
+        emit(" Righto, that's on the board:",
                 "   " + task,
-                " Now you have " + taskCount + " tasks in the list.");
+                " " + taskCount + " tasks lined up now.");
     }
 
     /** Prints confirmation that {@code task} was removed; {@code taskCount} is the new list size. */
     public void showTaskDeleted(Task task, int taskCount) {
-        emit(" Noted. I've removed this task:",
+        emit(" Ok, tossed that one back in the water:",
                 "   " + task,
-                " Now you have " + taskCount + " tasks in the list.");
+                " " + taskCount + " tasks lined up now.");
     }
 
     /** Prints confirmation that {@code task} was marked done. */
     public void showTaskMarked(Task task) {
-        emit(" Nice! I've marked this task as done:", "   " + task);
+        emit(" Nice one, that's caught and done:", "   " + task);
     }
 
     /** Prints confirmation that {@code task} was marked not done. */
     public void showTaskUnmarked(Task task) {
-        emit(" OK, I've marked this task as not done yet:", "   " + task);
+        emit(" Fair enough, back in the lineup:", "   " + task);
     }
 
     /** Prints each line to standard output and records it in the response buffer. */

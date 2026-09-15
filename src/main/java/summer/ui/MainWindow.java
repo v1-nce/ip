@@ -15,7 +15,7 @@ import summer.Summer;
  * field and a send button.
  */
 public class MainWindow {
-    private static final String GREETING = "Hello! I'm Summer.\nWhat can I do for you?";
+    private static final String GREETING = "Hey hey, Summer here.\nWhat's the move today?";
 
     @FXML
     private ScrollPane scrollPane;

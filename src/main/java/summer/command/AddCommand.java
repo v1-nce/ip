@@ -31,7 +31,7 @@ public class AddCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws SummerException {
         if (tasks.isFull()) {
-            ui.showMessage(" Sorry, I can only store up to 100 tasks!");
+            ui.showMessage(" Board's full, only room for 100 tasks out here.");
             return;
         }
         Task task = Parser.createTask(this.rawCommand);

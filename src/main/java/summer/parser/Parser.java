@@ -69,7 +69,7 @@ public class Parser {
         if (fullCommand.startsWith("find ")) {
             String keyword = fullCommand.substring("find ".length()).trim();
             if (keyword.isEmpty()) {
-                throw new SummerException("Please tell me what keyword to search for.");
+                throw new SummerException("Gimme a keyword to search for, bud.");
             }
             return new FindCommand(keyword);
         }
@@ -88,7 +88,7 @@ public class Parser {
         if (command.equals("todo") || command.startsWith("todo ")) {
             String description = command.substring("todo".length()).trim();
             if (description.isEmpty()) {
-                throw new SummerException("A todo needs a description.");
+                throw new SummerException("A todo needs a description, what's the plan?");
             }
 
             return new ToDo(description, false);
@@ -98,7 +98,7 @@ public class Parser {
             String details = command.substring("deadline".length()).trim();
             int byIndex = details.indexOf(" /by ");
             if (byIndex == -1) {
-                throw new SummerException("A deadline needs this format: deadline DESCRIPTION /by WHEN");
+                throw new SummerException("Deadlines go like this: deadline DESCRIPTION /by WHEN");
             }
 
             // indexOf found " /by " within details, so the text after it is a
@@ -109,7 +109,7 @@ public class Parser {
             String description = details.substring(0, byIndex).trim();
             String by = details.substring(byValueStart).trim();
             if (description.isEmpty() || by.isEmpty()) {
-                throw new SummerException("A deadline needs both a description and a /by value.");
+                throw new SummerException("Need both a description and a /by value for that deadline.");
             }
 
             return new Deadline(description, parseDate(by), false);
@@ -121,7 +121,7 @@ public class Parser {
             int toIndex = details.indexOf(" /to ");
             if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
                 throw new SummerException(
-                        "An event needs this format: event DESCRIPTION /from START /to END");
+                        "Events go like this: event DESCRIPTION /from START /to END");
             }
 
             // fromIndex < toIndex was just checked, so " /from " ends before
@@ -132,13 +132,13 @@ public class Parser {
             String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
             String to = details.substring(toIndex + " /to ".length()).trim();
             if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                throw new SummerException("An event needs a description, /from value, and /to value.");
+                throw new SummerException("An event needs a description, a /from, and a /to.");
             }
 
             return new Event(description, parseDate(from), parseDate(to), false);
         }
 
-        throw new SummerException("I don't know that command yet.");
+        throw new SummerException("Never heard of that one, try again.");
     }
 
     /**
@@ -152,7 +152,7 @@ public class Parser {
         try {
             return LocalDate.parse(text);
         } catch (DateTimeParseException e) {
-            throw new SummerException("Please give dates as yyyy-mm-dd, e.g. 2019-10-15.");
+            throw new SummerException("Dates go yyyy-mm-dd out here, e.g. 2019-10-15.");
         }
     }
 
@@ -169,7 +169,7 @@ public class Parser {
         try {
             return Integer.parseInt(argument) - 1;
         } catch (NumberFormatException e) {
-            throw new SummerException("Please give a task number, e.g. delete 2.");
+            throw new SummerException("Need a task number for that, e.g. delete 2.");
         }
     }
 }
