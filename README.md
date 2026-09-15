@@ -2,6 +2,8 @@
 
 This is a project template for a greenfield Java project. The chatbot built on top of it is named _Summer_. Given below are instructions on how to use it.
 
+See the [User Guide](docs/README.md) for how to use Summer.
+
 ## Setting up in Intellij
 
 Prerequisites: JDK 25, update Intellij to the most recent version.
