@@ -64,6 +64,11 @@ public class Ui {
         this.scanner.close();
     }
 
+    /** Prints a warning that {@code count} corrupted save-file lines were skipped on load. */
+    public void showCorruptedLinesSkipped(int count) {
+        emit(" Heads up, " + count + " line(s) in the save file looked broken and got skipped.");
+    }
+
     /** Prints the farewell message shown when the user exits. */
     public void showGoodbye() {
         emit(" Catch you later, don't forget the sunscreen!");

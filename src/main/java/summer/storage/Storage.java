@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import summer.task.Deadline;
 import summer.task.Event;
@@ -22,6 +20,7 @@ import summer.task.ToDo;
  */
 public class Storage {
     private final Path filePath;
+    private int skippedLineCount;
 
     /**
      * Creates a storage backed by the given file path.
@@ -36,23 +35,43 @@ public class Storage {
      * Loads tasks from the save file.
      * Returns an empty list if the file does not exist yet,
      * and skips any line that is corrupted rather than failing outright.
+     * The number of skipped lines is recorded and can be read via
+     * {@link #getSkippedLineCount()}.
      *
      * @return tasks read from disk, in file order
      */
     public List<Task> load() {
+        this.skippedLineCount = 0;
         if (!Files.exists(this.filePath)) {
             return new ArrayList<>();
         }
 
         try {
-            return Files.readAllLines(this.filePath).stream()
-                    .map(this::parseTask)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toCollection(ArrayList::new));
+            List<String> lines = Files.readAllLines(this.filePath);
+            List<Task> tasks = new ArrayList<>();
+            for (String line : lines) {
+                Task task = parseTask(line);
+                if (task == null) {
+                    this.skippedLineCount++;
+                } else {
+                    tasks.add(task);
+                }
+            }
+            return tasks;
         } catch (IOException e) {
             System.out.println(" Could not read saved tasks: " + e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * Returns how many lines the most recent {@link #load()} call skipped
+     * because they were corrupted or malformed.
+     *
+     * @return the number of corrupted lines skipped during the last load
+     */
+    public int getSkippedLineCount() {
+        return this.skippedLineCount;
     }
 
     /**

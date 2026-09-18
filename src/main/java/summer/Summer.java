@@ -31,6 +31,9 @@ public class Summer {
         this.storage = new Storage(DATA_FILE_PATH);
         this.tasks = new TaskList(MAX_TASKS);
         this.storage.load().forEach(this.tasks::add);
+        if (this.storage.getSkippedLineCount() > 0) {
+            this.ui.showCorruptedLinesSkipped(this.storage.getSkippedLineCount());
+        }
     }
 
     /**

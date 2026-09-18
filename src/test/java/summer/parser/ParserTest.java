@@ -162,4 +162,9 @@ public class ParserTest {
     public void parse_findWithoutKeyword_throws() {
         assertThrows(SummerException.class, () -> Parser.parse("find "));
     }
+
+    @Test
+    public void parse_bareFind_throws() {
+        assertThrows(SummerException.class, () -> Parser.parse("find"));
+    }
 }

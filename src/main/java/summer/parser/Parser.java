@@ -66,8 +66,8 @@ public class Parser {
             return new DeleteCommand(parseTaskNumber(fullCommand));
         }
 
-        if (fullCommand.startsWith("find ")) {
-            String keyword = fullCommand.substring("find ".length()).trim();
+        if (fullCommand.equals("find") || fullCommand.startsWith("find ")) {
+            String keyword = fullCommand.substring("find".length()).trim();
             if (keyword.isEmpty()) {
                 throw new SummerException("Gimme a keyword to search for, bud.");
             }
